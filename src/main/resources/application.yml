@@ -1,0 +1,26 @@
+server:
+  port: 9191
+spring:
+  application:
+    name: rakta-bank
+  datasource:
+    driverClassName: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/rakta_bank?autoreconnect=true
+    username: root
+    password: welcome
+  jpa:
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+    database: mysql
+    database-platform: org.hibernate.dialect.MySQLDialect
+
+application:
+  security:
+    jwt:
+      secret-key: 4D635166546A576E5A7234743777217A25432A462D4A614E645267556B587032
+      expiration: 3600000 # 1 hour
+      refresh-token:
+        expiration: 1800000 # 30 mins
+        
