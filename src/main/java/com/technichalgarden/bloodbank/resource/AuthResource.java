@@ -12,13 +12,13 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.technichalgarden.bloodbank.dto.AuthenticationRequest;
 import com.technichalgarden.bloodbank.dto.AuthenticationResponse;
-import com.technichalgarden.bloodbank.dto.RegisterRequest;
 import com.technichalgarden.bloodbank.dto.RegistrationDTO;
 import com.technichalgarden.bloodbank.dto.ResponseDTO;
 import com.technichalgarden.bloodbank.service.AuthService;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/v1/api/auth")
@@ -32,7 +32,7 @@ public class AuthResource {
 	}
 
 	@PostMapping("/register")
-	public ResponseEntity<ResponseDTO<RegistrationDTO>> register(@RequestBody RegistrationDTO request) {
+	public ResponseEntity<ResponseDTO<RegistrationDTO>> register(@Valid @RequestBody RegistrationDTO request) {
 		log.info("Start - Register new User");
 		ResponseDTO<RegistrationDTO> response = authService.register(request);
 		log.info("End - Register new User");

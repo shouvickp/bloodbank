@@ -22,7 +22,7 @@ public abstract class BbankModel implements Serializable {
 
 	@CreatedDate
 	@Column(name = "creation_ts", nullable = false, updatable = false)
-	protected Instant creationTs;
+	protected Instant creationTs = Instant.now();
 
 	@CreatedBy
 	@Column(name = "created_by", nullable = false, updatable = false)
@@ -30,7 +30,7 @@ public abstract class BbankModel implements Serializable {
 
 	@LastModifiedDate
 	@Column(name = "last_modification_ts")
-	protected Instant lastModificationTs;
+	protected Instant lastModificationTs = Instant.now();
 
 	@LastModifiedBy
 	@Column(name = "last_modified_by")

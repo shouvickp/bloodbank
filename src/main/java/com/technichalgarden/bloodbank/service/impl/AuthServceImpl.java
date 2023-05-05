@@ -89,7 +89,7 @@ public class AuthServceImpl implements AuthService {
 		String loginName = request.getUserType().name() + seriesGenerator.getSeries(request.getUserType().name());
 		log.debug("Saving basic user info to user table - start");
 		User user = new User().username(loginName).password(passwordEncoder.encode(request.getPassword()))
-				.role(userTypeToRoleMap.get(request.getUserType())).enabled(false);
+				.role(userTypeToRoleMap.get(request.getUserType())).enabled(true);
 		userRepository.save(user);
 		log.debug("Saving basic user info to user table - end");
 		switch (request.getUserType().name()) {
@@ -104,6 +104,7 @@ public class AuthServceImpl implements AuthService {
 			hospital.setCity(request.getCity());
 			hospital.setState(request.getState());
 			hospital.setPincode(request.getPincode());
+			hospital.setCreatedBy(loginName);
 			hospitalRepository.save(hospital);
 			log.debug("Saving hospital info to hospital table - end");
 			request.setLoginName(loginName);
@@ -120,6 +121,8 @@ public class AuthServceImpl implements AuthService {
 			reciever.setCity(request.getCity());
 			reciever.setState(request.getState());
 			reciever.setPincode(request.getPincode());
+			reciever.setBloodGroup(request.getBloodGroup());
+			reciever.setCreatedBy(loginName);
 			recieverRepository.save(reciever);
 			log.debug("Saving reciever info to reciever table - start");
 			request.setLoginName(loginName);

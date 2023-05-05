@@ -1,52 +1,55 @@
 package com.technichalgarden.bloodbank.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.technichalgarden.bloodbank.enumeration.BloodGroup;
 import com.technichalgarden.bloodbank.enumeration.UserType;
 
 import jakarta.annotation.Nonnull;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 
 public class RegistrationDTO {
-	@Nonnull
-	@Min(value = 3, message = "Name Should contains minimum 3 characters")
-	@Max(value = 255, message = "Name should not exceed 255 characters")
+	@NotNull(message = "Name cannot be empty")
+	@Size(min = 3, max=255, message="Name must contains minimum 3 characters and should not exceed 255 characters")
 	private String name;
 
 	@JsonProperty(value = "userName", access = JsonProperty.Access.READ_ONLY)
 	private String loginName;
 
-	@Nonnull
+	@NotNull(message = "Email cannot be empty")
 	@Pattern(regexp = "^[a-zA-Z0-9_!#$%&'*+/=?`{|}~^.-]+@[a-zA-Z0-9.-]+$", message = "Invalid Email Provided")
 	private String email;
 
-	@Nonnull
+	@NotNull(message = "Contact number cannot be empty")
 	@Size(min=10, max = 10, message="Mobile number must have 10 digits")
 	@Pattern(regexp = "^\\d{10}$", message = "Mobile number must contains 10 digits only")
 	private String contactNumber;
 
-	@Nonnull
+	@NotNull(message = "Address cannot be empty")
 	private String addressLine;
 
-	@Nonnull
+	@NotNull(message = "City cannot be empty")
 	private String city;
 
-	@Nonnull
+	@NotNull(message = "State cannot be empty")
 	private String state;
 
-	@Nonnull
+	@NotNull(message = "Pincode cannot be empty")
 	@Size(min=6, max = 6, message="Pincode must have 6 digits")
 	@Pattern(regexp = "^\\d{6}$", message = "Pincode must contains 6 digits only")
 	private String pincode;
 
 	@JsonProperty(value = "password", access = JsonProperty.Access.WRITE_ONLY)
-	@Nonnull
+	@NotNull(message = "Password cannot be empty")
 	private String password;
 
-	@Nonnull
+	@NotNull(message = "User type cannot be empty")
 	private UserType userType;
+	
+	private BloodGroup bloodGroup;
 
 	public String getName() {
 		return name;
@@ -126,6 +129,14 @@ public class RegistrationDTO {
 
 	public void setUserType(UserType userType) {
 		this.userType = userType;
+	}
+
+	public BloodGroup getBloodGroup() {
+		return bloodGroup;
+	}
+
+	public void setBloodGroup(BloodGroup bloodGroup) {
+		this.bloodGroup = bloodGroup;
 	}
 
 }
