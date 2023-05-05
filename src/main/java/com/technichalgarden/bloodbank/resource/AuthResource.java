@@ -2,6 +2,8 @@ package com.technichalgarden.bloodbank.resource;
 
 import java.io.IOException;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -11,6 +13,8 @@ import org.springframework.web.bind.annotation.RestController;
 import com.technichalgarden.bloodbank.dto.AuthenticationRequest;
 import com.technichalgarden.bloodbank.dto.AuthenticationResponse;
 import com.technichalgarden.bloodbank.dto.RegisterRequest;
+import com.technichalgarden.bloodbank.dto.RegistrationDTO;
+import com.technichalgarden.bloodbank.dto.ResponseDTO;
 import com.technichalgarden.bloodbank.service.AuthService;
 
 import jakarta.servlet.http.HttpServletRequest;
@@ -20,6 +24,7 @@ import jakarta.servlet.http.HttpServletResponse;
 @RequestMapping("/v1/api/auth")
 public class AuthResource {
 
+	private static final Logger log = LoggerFactory.getLogger(AuthResource.class);
 	private final AuthService authService;
 
 	public AuthResource(AuthService authService) {
@@ -27,8 +32,11 @@ public class AuthResource {
 	}
 
 	@PostMapping("/register")
-	public ResponseEntity<AuthenticationResponse> register(@RequestBody RegisterRequest request) {
-		return ResponseEntity.ok(authService.register(request));
+	public ResponseEntity<ResponseDTO<RegistrationDTO>> register(@RequestBody RegistrationDTO request) {
+		log.info("Start - Register new User");
+		ResponseDTO<RegistrationDTO> response = authService.register(request);
+		log.info("End - Register new User");
+		return ResponseEntity.ok(response);
 	}
 
 	@PostMapping("/authenticate")

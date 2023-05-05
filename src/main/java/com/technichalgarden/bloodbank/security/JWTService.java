@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
+import com.technichalgarden.bloodbank.dto.TokenInfo;
 import com.technichalgarden.bloodbank.dto.UserInfoDTO;
 import com.technichalgarden.bloodbank.enumeration.Role;
 
@@ -30,16 +31,24 @@ public class JWTService {
 	@Value("${application.security.jwt.refresh-token.expiration}")
 	private long refreshExpiration;
 
-	public String generateToken(Role role, String username) {
+	public TokenInfo generateToken(Role role, String username) {
 		Map<String, Object> extraClaims = new HashMap<>();
+		TokenInfo tokenInfo = new TokenInfo();
 		extraClaims.put("role", role.name());
-		return buildToken(extraClaims, username, jwtExpiration);
+		String token = buildToken(extraClaims, username, jwtExpiration);
+		tokenInfo.setToken(token);
+		tokenInfo.setExpiry(jwtExpiration);
+		return tokenInfo;
 	}
 
-	public String generateRefreshToken(Role role, String username) {
+	public TokenInfo generateRefreshToken(Role role, String username) {
 		Map<String, Object> extraClaims = new HashMap<>();
+		TokenInfo tokenInfo = new TokenInfo();
 		extraClaims.put("role", role.name());
-		return buildToken(extraClaims, username, refreshExpiration);
+		String token = buildToken(extraClaims, username, refreshExpiration);
+		tokenInfo.setToken(token);
+		tokenInfo.setExpiry(jwtExpiration);
+		return tokenInfo;
 	}
 
 	public UserInfoDTO getUserInfo(String token) {
@@ -53,6 +62,11 @@ public class JWTService {
 	public boolean isTokenValid(String token, UserDetails userDetails) {
 		final Claims claims = getAllClaims(token);
 		return (claims.getSubject().equals(userDetails.getUsername())) && !isTokenExpired(token);
+	}
+
+	public long getRefreshExpiration(String refreshToken) {
+		final Claims claims = getAllClaims(refreshToken);
+		return (claims.getExpiration().getTime() - new Date().getTime());
 	}
 
 	private String buildToken(Map<String, Object> extraClaims, String username, long expiration) {
