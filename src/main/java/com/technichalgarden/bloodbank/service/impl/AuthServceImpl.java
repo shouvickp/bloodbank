@@ -2,8 +2,7 @@ package com.technichalgarden.bloodbank.service.impl;
 
 import java.io.IOException;
 import java.util.EnumMap;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,7 +17,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.technichalgarden.bloodbank.component.SeriesGenerator;
 import com.technichalgarden.bloodbank.dto.AuthenticationRequest;
 import com.technichalgarden.bloodbank.dto.AuthenticationResponse;
-import com.technichalgarden.bloodbank.dto.RegisterRequest;
 import com.technichalgarden.bloodbank.dto.RegistrationDTO;
 import com.technichalgarden.bloodbank.dto.ResponseDTO;
 import com.technichalgarden.bloodbank.dto.TokenInfo;
@@ -35,7 +33,6 @@ import com.technichalgarden.bloodbank.repository.HospitalRepository;
 import com.technichalgarden.bloodbank.repository.RecieverRepository;
 import com.technichalgarden.bloodbank.repository.TokenRepository;
 import com.technichalgarden.bloodbank.repository.UserRepository;
-import com.technichalgarden.bloodbank.resource.AuthResource;
 import com.technichalgarden.bloodbank.security.JWTService;
 import com.technichalgarden.bloodbank.service.AuthService;
 
@@ -58,7 +55,7 @@ public class AuthServceImpl implements AuthService {
 	private final HospitalRepository hospitalRepository;
 	private final RecieverRepository recieverRepository;
 
-	private static final EnumMap<UserType, Role> userTypeToRoleMap = new EnumMap<>(UserType.class) {
+	private static final EnumMap<UserType, Role> userTypeToRoleMap = new EnumMap<UserType, Role>(UserType.class) {
 		private static final long serialVersionUID = 1L;
 		{
 			put(UserType.A, Role.ADMIN);
@@ -86,7 +83,7 @@ public class AuthServceImpl implements AuthService {
 	public ResponseDTO<RegistrationDTO> register(RegistrationDTO request) {
 		log.debug("Request for new user registration {}", request);
 		log.debug("Genrating username for userType {}", request.getUserType().name());
-		String loginName = request.getUserType().name() + seriesGenerator.getSeries(request.getUserType().name());
+		String loginName = request.getUserType().name() + seriesGenerator.getSeries(userTypeToRoleMap.get(request.getUserType()).name());
 		log.debug("Saving basic user info to user table - start");
 		User user = new User().username(loginName).password(passwordEncoder.encode(request.getPassword()))
 				.role(userTypeToRoleMap.get(request.getUserType())).enabled(true);
@@ -158,7 +155,7 @@ public class AuthServceImpl implements AuthService {
 	}
 
 	private void revokeAllUserTokens(User user) {
-		var validUserTokens = tokenRepository.findAllValidTokenByUser(user.getId());
+		List<Token> validUserTokens = tokenRepository.findAllValidTokenByUser(user.getId());
 		if (validUserTokens.isEmpty())
 			return;
 		validUserTokens.forEach(token -> {

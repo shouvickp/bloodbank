@@ -1,11 +1,14 @@
 package com.technichalgarden.bloodbank.security;
 
+import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.logout.LogoutHandler;
 import org.springframework.stereotype.Service;
 
+import com.technichalgarden.bloodbank.model.Token;
 import com.technichalgarden.bloodbank.repository.TokenRepository;
 
 import jakarta.servlet.http.HttpServletRequest;
@@ -25,11 +28,11 @@ public class LogoutService implements LogoutHandler {
 			return;
 		}
 		jwt = authHeader.substring(7);
-		var storedToken = tokenRepository.findByToken(jwt).orElse(null);
-		if (storedToken != null) {
-			storedToken.setExpired(true);
-			storedToken.setRevoked(true);
-			tokenRepository.save(storedToken);
+		Optional<Token> storedToken = tokenRepository.findByToken(jwt);
+		if (!storedToken.isEmpty()) {
+			storedToken.get().setExpired(true);
+			storedToken.get().setRevoked(true);
+			tokenRepository.save(storedToken.get());
 			SecurityContextHolder.clearContext();
 		}
 	}
