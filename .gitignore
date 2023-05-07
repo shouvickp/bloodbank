@@ -33,8 +33,8 @@ tmp/**/*
 *.swp
 *~.nib
 local.properties
-/.classpath
-/.settings/
+.classpath
+.settings/
 .loadpath
 .factorypath
 /src/main/resources/rebel.xml
@@ -53,8 +53,6 @@ local.properties
 
 # STS-specific
 /.sts4-cache/*
-/.classpath
-/.settings
 
 ######################
 # IntelliJ
