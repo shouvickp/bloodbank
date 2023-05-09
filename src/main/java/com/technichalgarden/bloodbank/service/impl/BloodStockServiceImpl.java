@@ -8,10 +8,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.technichalgarden.bloodbank.dto.BloodStockDTO;
+import com.technichalgarden.bloodbank.dto.UserInfoDTO;
+import com.technichalgarden.bloodbank.exception.ResourceNotFoundException;
 import com.technichalgarden.bloodbank.mapper.BloodStockMapper;
 import com.technichalgarden.bloodbank.model.BloodStock;
 import com.technichalgarden.bloodbank.repository.BloodStockRepository;
-import com.technichalgarden.bloodbank.security.JWTService;
+import com.technichalgarden.bloodbank.security.TokenDecoder;
 import com.technichalgarden.bloodbank.service.BloodStockService;
 
 import jakarta.transaction.Transactional;
@@ -27,14 +29,24 @@ public class BloodStockServiceImpl implements BloodStockService {
 	@Autowired
 	private BloodStockMapper bloodStockMapper;
 	@Autowired
-	private JWTService jwtService;
+	private TokenDecoder tokenDecoder;
 
 	@Override
 	public BloodStockDTO addStock(BloodStockDTO bloodStockDTO) {
 		log.debug("Inserting Blood Stock for hospital id {} and bloodgroup {}", bloodStockDTO.getHospitalId(),
 				bloodStockDTO.getBloodGroup());
 		BloodStock bloodStock = bloodStockMapper.toEntity(bloodStockDTO);
-		bloodStock.setCreatedBy("Hospital");
+		return bloodStockMapper.toDTO(bloodStockRepository.save(bloodStock));
+	}
+	
+	@Override
+	public BloodStockDTO updateStock(BloodStockDTO bloodStockDTO) {
+		log.debug("Updating Blood Stock for hospital id {} and bloodgroup {}", bloodStockDTO.getHospitalId(),
+				bloodStockDTO.getBloodGroup());
+		UserInfoDTO userInfoDTO = tokenDecoder.fetchUserInfoDTO();
+		BloodStock bloodStock = bloodStockRepository.findByHospitalIdAndBloodGroupAndCreatedBy(bloodStockDTO.getHospitalId(),
+				bloodStockDTO.getBloodGroup(), userInfoDTO.getUsername()).orElseThrow(()-> new ResourceNotFoundException("No Record Found for thsis hospital"));
+		bloodStock.setStockCount(bloodStockDTO.getStockCount());
 		return bloodStockMapper.toDTO(bloodStockRepository.save(bloodStock));
 	}
 

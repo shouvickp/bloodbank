@@ -32,26 +32,27 @@ public class ApplicationConfig {
 				.orElseThrow(() -> new UsernameNotFoundException("User not found"));
 	}
 
-    @Bean
-    AuthenticationProvider authenticationProvider() {
+	@Bean
+	AuthenticationProvider authenticationProvider() {
 		DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
 		authProvider.setUserDetailsService(userDetailsService());
 		authProvider.setPasswordEncoder(passwordEncoder());
 		return authProvider;
 	}
-    
-    @Bean
-    public AuthenticationEntryPoint unauthorizedEntryPoint() {
-        return (request, response, authException) -> response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-    }
 
-    @Bean
-    AuthenticationManager authenticationManager(AuthenticationConfiguration config) throws Exception {
+	@Bean
+	AuthenticationEntryPoint unauthorizedEntryPoint() {
+		return (request, response, authException) -> response.sendError(HttpServletResponse.SC_UNAUTHORIZED,
+				authException.getMessage());
+	}
+
+	@Bean
+	AuthenticationManager authenticationManager(AuthenticationConfiguration config) throws Exception {
 		return config.getAuthenticationManager();
 	}
 
-    @Bean
-    PasswordEncoder passwordEncoder() {
+	@Bean
+	PasswordEncoder passwordEncoder() {
 		return new BCryptPasswordEncoder(10, new SecureRandom());
 	}
 

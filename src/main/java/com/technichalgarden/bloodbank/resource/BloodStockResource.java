@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -40,6 +41,15 @@ public class BloodStockResource {
 		log.info("Start - Adding Blood Stock of blood group {} for Hostpital {}", bloodStockDTO.getBloodGroup(), bloodStockDTO.getHospitalId());
 		BloodStockDTO bloodStockResponse = bloodStockService.addStock(bloodStockDTO);
 		log.info("End - Adding Blood Stock of blood group {} for Hostpital {}", bloodStockDTO.getBloodGroup(), bloodStockDTO.getHospitalId());
+		return ResponseEntity.ok(bloodStockResponse);
+	}
+	
+	@IsHospital
+	@PutMapping("/blood-stock")
+	public ResponseEntity<BloodStockDTO> updateBloodStock(@Valid @RequestBody BloodStockDTO bloodStockDTO) {
+		log.info("Start - Update Blood Stock of blood group {} for Hostpital {}", bloodStockDTO.getBloodGroup(), bloodStockDTO.getHospitalId());
+		BloodStockDTO bloodStockResponse = bloodStockService.updateStock(bloodStockDTO);
+		log.info("End - Update Blood Stock of blood group {} for Hostpital {}", bloodStockDTO.getBloodGroup(), bloodStockDTO.getHospitalId());
 		return ResponseEntity.ok(bloodStockResponse);
 	}
 	
