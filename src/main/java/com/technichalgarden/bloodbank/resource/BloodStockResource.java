@@ -13,11 +13,14 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.technichalgarden.bloodbank.dto.BloodStockAvalibiltyInfoDTO;
 import com.technichalgarden.bloodbank.dto.BloodStockDTO;
 import com.technichalgarden.bloodbank.dto.RegistrationDTO;
 import com.technichalgarden.bloodbank.dto.ResponseDTO;
+import com.technichalgarden.bloodbank.dto.SearchBloodStockAvalabilityDTO;
 import com.technichalgarden.bloodbank.security.IsHospital;
 import com.technichalgarden.bloodbank.security.IsHospitalPatient;
+import com.technichalgarden.bloodbank.security.IsPatient;
 import com.technichalgarden.bloodbank.service.AuthService;
 import com.technichalgarden.bloodbank.service.BloodStockService;
 
@@ -60,6 +63,16 @@ public class BloodStockResource {
 		List<BloodStockDTO> bloodStocks = bloodStockService.getStocksByHospitalId(hospitalId);
 		log.info("End - get Blood Stock details for Hostpital {}", hospitalId);
 		return ResponseEntity.ok(bloodStocks);
+	}
+	
+	@IsPatient
+	@PostMapping("/blood-stock/search-availability")
+	public ResponseEntity<List<BloodStockAvalibiltyInfoDTO>> searchAvailableBloodStock(
+			@RequestBody SearchBloodStockAvalabilityDTO searchBloodStockAvalabilityDTO) {
+		log.info("Start - Search Available Blood Stock : {}", searchBloodStockAvalabilityDTO);
+		List<BloodStockAvalibiltyInfoDTO> bloodStockAvaliabilityInfos = bloodStockService.searchBloodStockAvalability(searchBloodStockAvalabilityDTO);
+		log.info("End - Search Available Blood Stock : {}", searchBloodStockAvalabilityDTO);
+		return ResponseEntity.ok(bloodStockAvaliabilityInfos);
 	}
 
 }

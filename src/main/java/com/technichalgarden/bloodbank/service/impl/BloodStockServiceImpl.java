@@ -7,7 +7,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.technichalgarden.bloodbank.dto.BloodStockAvalibiltyInfoDTO;
 import com.technichalgarden.bloodbank.dto.BloodStockDTO;
+import com.technichalgarden.bloodbank.dto.SearchBloodStockAvalabilityDTO;
 import com.technichalgarden.bloodbank.dto.UserInfoDTO;
 import com.technichalgarden.bloodbank.exception.ResourceNotFoundException;
 import com.technichalgarden.bloodbank.mapper.BloodStockMapper;
@@ -54,6 +56,13 @@ public class BloodStockServiceImpl implements BloodStockService {
 	public List<BloodStockDTO> getStocksByHospitalId(Long hospitalId) {
 		log.debug("Fetching Blood Stocks detail for hospital {}", hospitalId);
 		return bloodStockMapper.toDto(bloodStockRepository.findByHospitalId(hospitalId));
+	}
+
+	@Override
+	public List<BloodStockAvalibiltyInfoDTO> searchBloodStockAvalability(
+			SearchBloodStockAvalabilityDTO searchBloodStockAvalabilityDTO) {
+		List<BloodStockAvalibiltyInfoDTO>  responseList = bloodStockRepository.dynamicSearchBloodStockAvalibilityQueryDSL(searchBloodStockAvalabilityDTO);
+		return responseList;
 	}
 
 }

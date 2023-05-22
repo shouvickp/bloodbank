@@ -9,11 +9,11 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.authentication.logout.LogoutHandler;
 
+import com.technichalgarden.bloodbank.security.JWTAuthenticationEntryPoint;
 import com.technichalgarden.bloodbank.security.JWTFilter;
 
 @Configuration
@@ -28,7 +28,7 @@ public class SecurityConfig {
 	@Autowired
 	private LogoutHandler logoutHandler;
 	@Autowired
-	private AuthenticationEntryPoint unauthorizedEntryPoint;
+	private JWTAuthenticationEntryPoint unauthorizedEntryPoint;
 
 	@Bean
 	public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception{

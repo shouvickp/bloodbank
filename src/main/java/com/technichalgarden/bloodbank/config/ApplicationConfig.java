@@ -41,12 +41,6 @@ public class ApplicationConfig {
 	}
 
 	@Bean
-	AuthenticationEntryPoint unauthorizedEntryPoint() {
-		return (request, response, authException) -> response.sendError(HttpServletResponse.SC_UNAUTHORIZED,
-				authException.getMessage());
-	}
-
-	@Bean
 	AuthenticationManager authenticationManager(AuthenticationConfiguration config) throws Exception {
 		return config.getAuthenticationManager();
 	}
