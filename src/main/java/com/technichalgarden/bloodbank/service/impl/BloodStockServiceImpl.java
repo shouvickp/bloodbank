@@ -5,6 +5,8 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.technichalgarden.bloodbank.dto.BloodStockAvalibiltyInfoDTO;
@@ -59,10 +61,10 @@ public class BloodStockServiceImpl implements BloodStockService {
 	}
 
 	@Override
-	public List<BloodStockAvalibiltyInfoDTO> searchBloodStockAvalability(
+	public Page<BloodStockAvalibiltyInfoDTO> searchBloodStockAvalability(Pageable pageable,
 			SearchBloodStockAvalabilityDTO searchBloodStockAvalabilityDTO) {
-		List<BloodStockAvalibiltyInfoDTO>  responseList = bloodStockRepository.dynamicSearchBloodStockAvalibilityQueryDSL(searchBloodStockAvalabilityDTO);
-		return responseList;
+		Page<BloodStockAvalibiltyInfoDTO>  responsePage = bloodStockRepository.dynamicSearchBloodStockAvalibilityQueryDSL(pageable, searchBloodStockAvalabilityDTO);
+		return responsePage;
 	}
 
 }

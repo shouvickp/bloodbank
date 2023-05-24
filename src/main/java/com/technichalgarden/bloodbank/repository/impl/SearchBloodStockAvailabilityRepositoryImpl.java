@@ -18,6 +18,9 @@ import com.technichalgarden.bloodbank.repository.SearchBloodStockAvailabilityRep
 import io.jsonwebtoken.lang.Objects;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 
 public class SearchBloodStockAvailabilityRepositoryImpl implements SearchBloodStockAvailabilityRepository {
 
@@ -27,8 +30,8 @@ public class SearchBloodStockAvailabilityRepositoryImpl implements SearchBloodSt
 	private EntityManager entityManager;
 
 	@Override
-	public List<BloodStockAvalibiltyInfoDTO> dynamicSearchBloodStockAvalibilityQueryDSL(
-			SearchBloodStockAvalabilityDTO searchBloodStockAvalabilityDTO) {
+	public Page<BloodStockAvalibiltyInfoDTO> dynamicSearchBloodStockAvalibilityQueryDSL(Pageable pageable,
+																						SearchBloodStockAvalabilityDTO searchBloodStockAvalabilityDTO) {
 
 		QHospital qHospital = QHospital.hospital;
 		QBloodStock qBloodStock = QBloodStock.bloodStock;
@@ -51,12 +54,26 @@ public class SearchBloodStockAvailabilityRepositoryImpl implements SearchBloodSt
 			query.where(qBloodStock.bloodGroup.eq(searchBloodStockAvalabilityDTO.getBloodGroup()));
 		}
 
+		if (null != pageable) {
+			query.offset((long) pageable.getPageNumber() * (long) pageable.getPageSize());
+			query.limit(pageable.getPageSize());
+		}
+		long total = query.fetchCount();
+
 		List<Tuple> bloodStockList = query.fetch();
+
+		List<BloodStockAvalibiltyInfoDTO> respList = getBloodStockAvalibiltyInfoDTOS(qHospital, qBloodStock, bloodStockList);
+
+		return new PageImpl<>(respList, pageable, total);
+
+	}
+
+	private List<BloodStockAvalibiltyInfoDTO> convertToDTO(QHospital qHospital, QBloodStock qBloodStock, List<Tuple> bloodStockList) {
 		Long hospitalId = 0l;
 		List<BloodStockAvalibiltyInfoDTO> responseList = new ArrayList<>();
 		List<AvaliableBloodStockDTO> availableBloodStockList = new ArrayList<>();
 		BloodStockAvalibiltyInfoDTO bloodStockAvalibiltyInfoDTO = new BloodStockAvalibiltyInfoDTO();
-		for (Tuple hospital : bloodStockList) {			
+		for (Tuple hospital : bloodStockList) {
 			if (hospital.get(qHospital.id) != hospitalId) {
 				if(hospitalId!=0) {
 					bloodStockAvalibiltyInfoDTO.setBloodStocks(availableBloodStockList);
@@ -77,13 +94,12 @@ public class SearchBloodStockAvailabilityRepositoryImpl implements SearchBloodSt
 			avaliableBloodStockDTO.setBloodGroup(hospital.get(qBloodStock.bloodGroup));
 			avaliableBloodStockDTO.setStockCount(hospital.get(qBloodStock.stockCount));
 			availableBloodStockList.add(avaliableBloodStockDTO);
-			
+
 		}
 		if(!bloodStockList.isEmpty()) {
 			bloodStockAvalibiltyInfoDTO.setBloodStocks(availableBloodStockList);
 			responseList.add(bloodStockAvalibiltyInfoDTO);
 		}
 		return responseList;
-
 	}
 }
