@@ -1,57 +1,26 @@
-package com.technichalgarden.bloodbank.model;
-
-import java.io.Serializable;
-
-import org.hibernate.annotations.Cache;
-import org.hibernate.annotations.CacheConcurrencyStrategy;
+package com.technichalgarden.bloodbank.dto;
 
 import com.technichalgarden.bloodbank.enumeration.BloodGroup;
 import com.technichalgarden.bloodbank.enumeration.RequestStatus;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+public class RequestDTO {
 
-@Entity
-@Table(name = "requests")
-@Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-public class Requests extends BbankModel implements Serializable {
-
-	private static final long serialVersionUID = 1L;
-
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "id")
 	private Long id;
 
-	@Column(name = "request_ref_no", nullable = false)
 	private String requestRefNo;
 
-	@Column(name = "reciever_id", nullable = false)
 	private Long recieverId;
 
-	@Column(name = "hospital_id", nullable = false)
 	private Long hospitalId;
 
-	@Column(name = "patient_name", nullable = false, length = 255)
 	private String patientName;
 
-	@Column(name = "patient_email", nullable = false, length = 255)
 	private String patientEmail;
 
-	@Enumerated(EnumType.STRING)
-	@Column(name = "blood_group", nullable = false, length = 12)
 	private BloodGroup bloodGroup;
 
-	@Column(name = "bottles", nullable = false)
 	private Long bottles;
 
-	@Column(name = "status", nullable = false)
 	private RequestStatus status;
 
 	public Long getId() {
@@ -128,9 +97,9 @@ public class Requests extends BbankModel implements Serializable {
 
 	@Override
 	public String toString() {
-		return "Requests [id=" + id + ", requestRefNo=" + requestRefNo + ", recieverId=" + recieverId + ", hospitalId="
-				+ hospitalId + ", patientName=" + patientName + ", patientEmail=" + patientEmail + ", bloodGroup="
-				+ bloodGroup + ", bottles=" + bottles + ", status=" + status + "]";
+		return "RequestDTO [id=" + id + ", requestRefNo=" + requestRefNo + ", recieverId=" + recieverId
+				+ ", hospitalId=" + hospitalId + ", patientName=" + patientName + ", patientEmail=" + patientEmail
+				+ ", bloodGroup=" + bloodGroup + ", bottles=" + bottles + ", status=" + status + "]";
 	}
 
 }

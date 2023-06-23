@@ -62,7 +62,7 @@ public class SearchBloodStockAvailabilityRepositoryImpl implements SearchBloodSt
 
 		List<Tuple> bloodStockList = query.fetch();
 
-		List<BloodStockAvalibiltyInfoDTO> respList = getBloodStockAvalibiltyInfoDTOS(qHospital, qBloodStock, bloodStockList);
+		List<BloodStockAvalibiltyInfoDTO> respList = convertToDTO(qHospital, qBloodStock, bloodStockList);
 
 		return new PageImpl<>(respList, pageable, total);
 
