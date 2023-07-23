@@ -1,0 +1,29 @@
+spring:
+  logging:
+    level:
+      org.springframework: debug
+      org.hibernate: debug
+  datasource:
+    #    driverClassName: com.mysql.cj.jdbc.Driver
+    #    url: jdbc:mysql://localhost:3306/blood_bank_service?autoreconnect=true
+    url: jdbc:postgresql://dpg-cib0rel9aq007t8o8lqg-a.oregon-postgres.render.com:5432/blood_bank_service
+    username: admin
+    password: aAZnwmH1cUQSbud7JOcrkx8v0L7YVJlX
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    show-sql: true
+    hibernate:
+      # ddl-auto: create-drop
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        format_sql: true
+    database: postgresql
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+application:
+  security:
+    jwt:
+      secret-key: 4D635166546A576E5A7234743777217A25432A462D4A614E645267556B587032
+      expiration: 3600000 # 1 hour
+      refresh-token:
+        expiration: 86400000 # 24 hours

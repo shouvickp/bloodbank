@@ -20,7 +20,7 @@ public class SeriesGenerator {
 
 	public synchronized String getSeries(String seriesName) {
 		StringBuilder sql = new StringBuilder();
-		sql.append("SELECT * FROM blood_bank_series WHERE name ='").append(seriesName).append("' FOR UPDATE");
+		sql.append("SELECT * FROM _blood_bank_series WHERE name ='").append(seriesName).append("' FOR UPDATE");
 		Query query = entityManager.createNativeQuery(sql.toString(), BloodBankSeries.class);
 		List<BloodBankSeries> bloodBankSeriesList = query.getResultList();
 		BloodBankSeries bloodBankSeries = null;
