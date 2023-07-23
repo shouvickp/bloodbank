@@ -10,7 +10,7 @@
 	</parent>
 	<groupId>com.technichalgarden</groupId>
 	<artifactId>bloodbank</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>1.0.0</version>
 	<name>blood-bank</name>
 	<description>A blood bank project inSpring Boot</description>
 	<properties>
