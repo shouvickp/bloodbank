@@ -1,5 +1,14 @@
-FROM eclipse-temurin:17-jdk-alpine
-VOLUME /tmp
-COPY /target/bloodbank-1.0.0.jar app.jar
+#
+# Build stage
+#
+FROM maven:3.8.2-jdk-17 AS build
+COPY . .
+RUN mvn clean package -DskipTests
+
+#
+# Package stage
+#
+FROM openjdk:17-jdk-slim
+COPY --from=build /target/bloodbank-1.0.0.jar app.jar
 EXPOSE 8080
-CMD java -Dspring.profiles.active=$PROFILE -Duser.timezone="Asia/Kolkata" -jar app.jar --DB_HOSTNAME=$DATABASE_SVC --DB_PORT=$DATABASE_PORT --DB_USER=$DATABASE_USER --DB_PASSWORD=$DATABASE_PASSWORD --CLIENT_SECRET=$JWT_SECRET
+ENTRYPOINT ["java","-jar","app.jar"]
