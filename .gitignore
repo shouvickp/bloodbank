@@ -3,7 +3,9 @@
 ######################
 /src/main/webapp/content/css/main.css
 /target/classes/static/**
+/target/classes/**
 /src/test/javascript/coverage/
+/src/main/generated/**
 
 ######################
 # Node
@@ -158,3 +160,4 @@ Desktop.ini
 ######################
 /coverage/
 /.nyc_output/
+/target/classes
